@@ -109,7 +109,7 @@ def create_ble_serial(address, disconnected_handler):
     
 
 
-class FlipperZeroFileSysten(fuse.Operations, fuse.LoggingMixIn):
+class FlipperZeroFileSysten(fuse.LoggingMixIn, fuse.Operations):
     def __init__(self, serial_port) -> None:
         super().__init__()
         self.api = flipper_api.FlipperAPI(serial_port)
