@@ -201,6 +201,11 @@ class FlipperZeroFileSysten(fuse.LoggingMixIn, fuse.Operations):
 
         return attr
 
+
+    def getxattr(self, path, name, position=0):
+        print(f"getxattr({path}, {name}, {position})")
+        return fuse.FuseOSError(errno.ENODATA)
+
     def read(self, path, size, offset, fh):
         cached = self.get_file_by_path(path)
 
@@ -259,7 +264,13 @@ class FlipperZeroFileSysten(fuse.LoggingMixIn, fuse.Operations):
         })
         self.api.mkdir(path)
         return
-        
+
+    def truncate(self, path, length, fh=None):
+        cached = self.get_file_by_path(path)
+
+        cached['contents'] = []
+        cached['attr']['st_size'] = len(cached['contents'])
+        self.api.write(path, bytes(cached['contents']))
 
     def rename(self, old, new):
         try:
